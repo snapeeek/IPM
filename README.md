@@ -1,2 +1,2 @@
-# IPM1
+# IPM
 Przedmiot interfejsy platform mobilnych
