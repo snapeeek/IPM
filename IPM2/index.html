@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Patterns</title>
+</head>
+<body>
+
+Email: <input type="email" id="email" name="email" placeholder="example@gmail.com" style="width: 250px">
+<br><br>
+Kod pocztowy: <input type="text" pattern="[0-9]{2}-[0-9]{3}" id="postal_code" name="postal_code" placeholder="95-015">
+<br><br>
+NIP: <input type="text" pattern="[0-9]{3}-[0-9]{3}-[0-9]{2}-[0-9]{2}" id="nip" name="nip" placeholder="123-123-45-45">
+<br><br>
+Numer dowodu: <input type="text" pattern="[A-Z]{3}[0-9]{6}" id="dowod" name="dowod" placeholder="ABC123456">
+<br><br>
+IPv4: <input type="text" pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" id="ipv4" name="ipv4" placeholder="255.255.255.255" style="width: 250px">
+<br><br>
+URL: <input type="text" pattern="(http[s]*://)([a-zA-Z0-9-]+\.[0-9a-zA-Z]+)[?/]" id="url" name="url" placeholder="https://www.messenger.com" style="width: 250px">
+<br><br>
+Katalog (małe litery): <input type="text" pattern="[a-zA-Z]:(windows|winnt|win|dos|msdos|)(\[a-z]+)+" id="katalog" name="katalog" placeholder="C:\windows">
+<br><br>
+Katalog (duże litery): <input type="text" pattern="[a-zA-Z]:(windows|winnt|win|dos|msdos|)(\[a-zA-Z]+)+" id="katalog2" name="katalog2" placeholder="C:\WinDows">
+<br><br>
+etc: <input type="text" pattern="/etc/[a-zA-Z]+" id="etc" name="etc" placeholder="/etc/help">
+<br><br>
+IPv6: <input type="text" pattern="((^|:)([0-9a-fA-F]{0,4})){1,8}$" id="ipv6" name="ipv6" placeholder="684D:1111:222:3333:4444:5555:6:77" style="width: 250px">
+<br><br>
+Numer telefonu: <input type="tel" pattern="[1-9][0-9]{2}-[0-9]{3}-[0-9]{3}" id="tel" name="tel" placeholder="668-677-429">
+
+
+
+
+
+</body>
+</html>
