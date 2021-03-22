@@ -1,20 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
     <meta charset="UTF-8">
     <title>Klocki</title>
     <link rel="stylesheet" href="stylesheet.css">
-<!--    <link rel="script" href="scripts.js">-->
+    <script src="https://unpkg.com/konva@7.2.5/konva.min.js"></script>
     <script src="scripts.js"></script>
+
 </head>
 <body style="">
-<canvas id="platform" style="border:1px solid #000000; width: 80%; height: 100%; display: inline-block">
 
-</canvas>
+<div id="platform" style="display: inline-block; width:80%; height:80%; border:1px solid #d3d3d3;"></div>
+<button onclick="createBlock()" style="display: inline-block; width: 20%;">Generuj klocek</button>
 
-<div id="block_generator" style="height: 100%; display: inline-block">
-    <button onclick="createBlock()">Generuj klocek</button>
-</div>
 
 </body>
 </html>
