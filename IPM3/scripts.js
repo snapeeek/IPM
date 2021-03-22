@@ -7,7 +7,8 @@ function getRandomColor() {
     return color;
 }
 
-var width, height, stage, layer;
+var width, height, stage, layer
+boxlist = [];
 window.onload = function () {
     width = window.innerWidth * 0.8;
     height = window.innerHeight;
@@ -32,10 +33,10 @@ window.onload = function () {
         fill: 'black',
         stroke: 'black',
         strokeWidth: 4,
-        draggable: true,
+        draggable: false,
     });
 
-    layer.add(box);
+    layer.add(floor);
 
     stage.add(layer);
 }
@@ -70,8 +71,15 @@ function createBlock() {
     box.on('mouseout', function () {
         document.body.style.cursor = 'default';
     });
+    box.on('dragend', function () {
+
+        //tutaj powinno być sprawdzanie kolizji, ale nie wiem sam jak je zrobic
+    })
 
     layer.add(box);
+    boxlist.push(box);
+    console.log(boxlist)
+    console.log(boxlist[0])
 
     stage.add(layer);
 }
