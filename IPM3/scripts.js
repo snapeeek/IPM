@@ -9,8 +9,8 @@ function getRandomColor() {
 
 var width, height, stage, layer;
 window.onload = function () {
-    width = window.innerWidth;
-    height = window.innerHeight * 0.8;
+    width = window.innerWidth * 0.8;
+    height = window.innerHeight;
 
     stage = new Konva.Stage({
         container: 'platform',
@@ -21,6 +21,32 @@ window.onload = function () {
     layer = new Konva.Layer();
 
     stage.add(layer);
+
+    var rectX = stage.width();
+    var rectY = stage.height();
+    floor = new Konva.Rect({
+        x: 0,
+        y: rectY - 50,
+        width: rectX,
+        height: 50,
+        fill: 'black',
+        stroke: 'black',
+        strokeWidth: 4,
+        draggable: true,
+    });
+
+    layer.add(box);
+
+    stage.add(layer);
+}
+
+window.onresize = function () {
+    width = window.innerWidth * 0.8;
+    height = window.innerHeight;
+    stage.width(width);
+    stage.height(height);
+    floor.width(width)
+    floor.y(height-50)
 }
 
 function createBlock() {
@@ -45,9 +71,8 @@ function createBlock() {
         document.body.style.cursor = 'default';
     });
 
-    layer.draw(box);
+    layer.add(box);
 
-
-    stage.refresh()
-    console.log("test")
+    stage.add(layer);
 }
+
