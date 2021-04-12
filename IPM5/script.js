@@ -12,9 +12,9 @@ if (!window.indexedDB) {
     window.alert("Your browser doesn't support a stable version of IndexedDB.")
 }
 
-const employeeData = [
-    {id: "00-01", name: "gopal", age: 35, email: "gopal@tutorialspoint.com"},
-    {id: "00-02", name: "prasad", age: 32, email: "prasad@tutorialspoint.com"}
+const clientData = [
+    {id: "00-01", name: "gopal", surname: "gogo", email: "gopal@tutorialspoint.com"},
+    {id: "00-02", name: "prasad", surname:"tudu", email: "prasad@tutorialspoint.com"}
 ];
 var db;
 var request = window.indexedDB.open("newDatabase", 1);
@@ -30,16 +30,16 @@ request.onsuccess = function (event) {
 
 request.onupgradeneeded = function (event) {
     var db = event.target.result;
-    var objectStore = db.createObjectStore("employee", {keyPath: "id"});
+    var objectStore = db.createObjectStore("client", {keyPath: "id"});
 
-    for (var i in employeeData) {
-        objectStore.add(employeeData[i]);
+    for (var i in clientData) {
+        objectStore.add(clientData[i]);
     }
 }
 
 function read() {
-    var transaction = db.transaction(["employee"]);
-    var objectStore = transaction.objectStore("employee");
+    var transaction = db.transaction(["client"]);
+    var objectStore = transaction.objectStore("client");
     var request = objectStore.get("00-03");
 
     request.onerror = function (event) {
@@ -49,8 +49,7 @@ function read() {
     request.onsuccess = function (event) {
         // Do something with the request.result!
         if (request.result) {
-            alert("Name: " + request.result.name + ", Age: " + request.result.age +
-                ", Email: " + request.result.email);
+            alert("Name: " + request.result.name + ", Email: " + request.result.email);
         } else {
             alert("Kenny couldn't be found in your database!");
         }
@@ -58,14 +57,13 @@ function read() {
 }
 
 function readAll() {
-    var objectStore = db.transaction("employee").objectStore("employee");
+    var objectStore = db.transaction("client").objectStore("client");
 
     objectStore.openCursor().onsuccess = function (event) {
         var cursor = event.target.result;
 
         if (cursor) {
-            alert("Name for id " + cursor.key + " is " + cursor.value.name + ", Age: " +
-                cursor.value.age + ", Email: " + cursor.value.email);
+            alert("Name for id " + cursor.key + " is " + cursor.value.name + " " + cursor.value.surname + ", Email: " + cursor.value.email);
             cursor.continue();
         } else {
             alert("No more entries!");
@@ -74,9 +72,11 @@ function readAll() {
 }
 
 function add() {
-    var request = db.transaction(["employee"], "readwrite")
-        .objectStore("employee")
-        .add({id: "00-03", name: "Kenny", age: 19, email: "kenny@planet.org"});
+
+    var request = db.transaction(["client"], "readwrite")
+        .objectStore("client")
+        .add({id: "00-03", name: document.getElementById('name').value, surname: document.getElementById('surname').value,
+            email: document.getElementById('email').value});
 
     request.onsuccess = function (event) {
         alert("Kenny has been added to your database.");
@@ -88,8 +88,8 @@ function add() {
 }
 
 function remove() {
-    var request = db.transaction(["employee"], "readwrite")
-        .objectStore("employee")
+    var request = db.transaction(["client"], "readwrite")
+        .objectStore("client")
         .delete("00-03");
 
     request.onsuccess = function (event) {
