@@ -57,34 +57,46 @@ function read() {
 }
 
 function readAll() {
-    generateTableHead();
+    // generateTableHead();
+    // var objectStore = db.transaction("client").objectStore("client");
+    //
+    // objectStore.openCursor().onsuccess = function (event) {
+    //     var cursor = event.target.result;
+    //     console.log(cursor);
+    //     const table = document.getElementById('dblist');
+    //     while (true) {
+    //         if (cursor) {
+    //             var row = table.insertRow();
+    //             var cell = row.insertCell();
+    //             var text = document.createTextNode(cursor.key);
+    //             cell.appendChild(text);
+    //
+    //             cell = row.insertCell();
+    //             text = document.createTextNode(cursor.value.name);
+    //             cell.appendChild(text);
+    //
+    //             cell = row.insertCell();
+    //             text = document.createTextNode(cursor.value.surname);
+    //             cell.appendChild(text);
+    //
+    //             cell = row.insertCell();
+    //             text = document.createTextNode(cursor.value.email);
+    //             cell.appendChild(text);
+    //             cursor.continue();
+    //         } else
+    //             break;
+    //     }
+    // };
     var objectStore = db.transaction("client").objectStore("client");
 
     objectStore.openCursor().onsuccess = function (event) {
         var cursor = event.target.result;
-        console.log(cursor);
-        const table = document.getElementById('dblist');
-        while (true) {
-            if (cursor) {
-                var row = table.insertRow();
-                var cell = row.insertCell();
-                var text = document.createTextNode(cursor.key);
-                cell.appendChild(text);
 
-                cell = row.insertCell();
-                text = document.createTextNode(cursor.value.name);
-                cell.appendChild(text);
-
-                cell = row.insertCell();
-                text = document.createTextNode(cursor.value.surname);
-                cell.appendChild(text);
-
-                cell = row.insertCell();
-                text = document.createTextNode(cursor.value.email);
-                cell.appendChild(text);
-                cursor.continue();
-            } else
-                break;
+        if (cursor) {
+            alert("Name for id " + cursor.key + " is " + cursor.value.name + ", Surname: " + cursor.value.surname + ", Email:  " + cursor.value.email);
+            cursor.continue();
+        } else {
+            alert("No more entries!");
         }
     };
 }
@@ -110,7 +122,7 @@ function add() {
 function remove() {
     var request = db.transaction(["client"], "readwrite")
         .objectStore("client")
-        .delete("00-03");
+        .delete("3");
 
     request.onsuccess = function (event) {
         alert("Kenny's entry has been removed from your database.");
