@@ -13,8 +13,8 @@ if (!window.indexedDB) {
 }
 
 const clientData = [
-    {id: "00-01", name: "gopal", surname: "gogo", email: "gopal@tutorialspoint.com"},
-    {id: "00-02", name: "prasad", surname: "tudu", email: "prasad@tutorialspoint.com"}
+    {name: "gopal", surname: "gogo", email: "gopal@tutorialspoint.com"},
+    {name: "prasad", surname: "tudu", email: "prasad@tutorialspoint.com"}
 ];
 var db;
 var request = window.indexedDB.open("newDatabase", 1);
@@ -30,7 +30,7 @@ request.onsuccess = function (event) {
 
 request.onupgradeneeded = function (event) {
     var db = event.target.result;
-    var objectStore = db.createObjectStore("client", {keyPath: "id"});
+    var objectStore = db.createObjectStore("client", {autoIncrement: true});
 
     for (var i in clientData) {
         objectStore.add(clientData[i]);
@@ -62,13 +62,30 @@ function readAll() {
 
     objectStore.openCursor().onsuccess = function (event) {
         var cursor = event.target.result;
-        generateTable(cursor);
-    //     if (cursor) {
-    //         alert("Name for id " + cursor.key + " is " + cursor.value.name + " " + cursor.value.surname + ", Email: " + cursor.value.email);
-    //         cursor.continue();
-    //     } else {
-    //         alert("No more entries!");
-    //     }
+        console.log(cursor);
+        const table = document.getElementById('dblist');
+        while (true) {
+            if (cursor) {
+                var row = table.insertRow();
+                var cell = row.insertCell();
+                var text = document.createTextNode(cursor.key);
+                cell.appendChild(text);
+
+                cell = row.insertCell();
+                text = document.createTextNode(cursor.value.name);
+                cell.appendChild(text);
+
+                cell = row.insertCell();
+                text = document.createTextNode(cursor.value.surname);
+                cell.appendChild(text);
+
+                cell = row.insertCell();
+                text = document.createTextNode(cursor.value.email);
+                cell.appendChild(text);
+                cursor.continue();
+            } else
+                break;
+        }
     };
 }
 
@@ -77,7 +94,7 @@ function add() {
     var request = db.transaction(["client"], "readwrite")
         .objectStore("client")
         .add({
-            id: "00-03", name: document.getElementById('name').value, surname: document.getElementById('surname').value,
+            name: document.getElementById('name').value, surname: document.getElementById('surname').value,
             email: document.getElementById('email').value
         });
 
@@ -117,32 +134,7 @@ function generateTableHead() {
 }
 
 function generateTable(cursor) {
-    const table = document.getElementById('dblist');
-    while (true)
-    {
-        if (cursor)
-        {
-            let row = table.insertRow();
-            let cell = row.insertCell();
-            let text = document.createTextNode(cursor.key);
-            cell.appendChild(text);
 
-            cell = row.insertCell();
-            text = document.createTextNode(cursor.value.name);
-            cell.appendChild(text);
-
-            cell = row.insertCell();
-            text = document.createTextNode(cursor.value.surname);
-            cell.appendChild(text);
-
-            cell = row.insertCell();
-            text = document.createTextNode(cursor.value.email);
-            cell.appendChild(text);
-            cursor.continue();
-        }
-        else
-            break;
-    }
 }
 
 
