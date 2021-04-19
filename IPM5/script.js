@@ -7,6 +7,7 @@ window.IDBTransaction = window.IDBTransaction ||
     window.webkitIDBTransaction || window.msIDBTransaction;
 window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange ||
     window.msIDBKeyRange
+isTableHeadGenerated = false
 
 if (!window.indexedDB) {
     window.alert("Your browser doesn't support a stable version of IndexedDB.")
@@ -57,48 +58,9 @@ function read() {
 }
 
 function readAll() {
-    // generateTableHead();
-    // var objectStore = db.transaction("client").objectStore("client");
-    //
-    // objectStore.openCursor().onsuccess = function (event) {
-    //     var cursor = event.target.result;
-    //     console.log(cursor);
-    //     const table = document.getElementById('dblist');
-    //     while (true) {
-    //         if (cursor) {
-    //             var row = table.insertRow();
-    //             var cell = row.insertCell();
-    //             var text = document.createTextNode(cursor.key);
-    //             cell.appendChild(text);
-    //
-    //             cell = row.insertCell();
-    //             text = document.createTextNode(cursor.value.name);
-    //             cell.appendChild(text);
-    //
-    //             cell = row.insertCell();
-    //             text = document.createTextNode(cursor.value.surname);
-    //             cell.appendChild(text);
-    //
-    //             cell = row.insertCell();
-    //             text = document.createTextNode(cursor.value.email);
-    //             cell.appendChild(text);
-    //             cursor.continue();
-    //         } else
-    //             break;
-    //     }
-    // };
-    var objectStore = db.transaction("client").objectStore("client");
-
-    objectStore.openCursor().onsuccess = function (event) {
-        var cursor = event.target.result;
-
-        if (cursor) {
-            alert("Name for id " + cursor.key + " is " + cursor.value.name + ", Surname: " + cursor.value.surname + ", Email:  " + cursor.value.email);
-            cursor.continue();
-        } else {
-            alert("No more entries!");
-        }
-    };
+    if (isTableHeadGenerated === false)
+        generateTableHead();
+    generateTableContents();
 }
 
 function add() {
@@ -119,22 +81,23 @@ function add() {
     }
 }
 
-function remove() {
+function remove(key) {
     var request = db.transaction(["client"], "readwrite")
         .objectStore("client")
-        .delete("3");
+        .delete(key);
 
     request.onsuccess = function (event) {
-        alert("Kenny's entry has been removed from your database.");
+        alert("Entry with id" + key + " has been deleted from the database");
     };
+
+    generateTableContents()
 }
 
 
 // ----------------------- Creating table --------------------------
 function generateTableHead() {
-    const data = ["ID", "NAME", "SURNAME", "EMAIL"];
+    const data = ["ID", "NAME", "SURNAME", "EMAIL", "OPTIONS"];
     const table = document.getElementById('dblist');
-    console.log("plz tell me u work")
     let thead = table.createTHead();
     let row = thead.insertRow();
     for (let key of data) {
@@ -142,11 +105,56 @@ function generateTableHead() {
         let text = document.createTextNode(key);
         th.appendChild(text);
         row.appendChild(th);
+        isTableHeadGenerated = true
     }
 }
 
-function generateTable(cursor) {
+function generateTableContents() {
+    var objectStore = db.transaction("client").objectStore("client");
 
+    removeAllChildNodes(document.getElementById('dblist').getElementsByTagName('tbody')[0])
+
+    objectStore.openCursor().onsuccess = function (event) {
+        var cursor = event.target.result;
+        var table = document.getElementById('dblist');
+
+
+        if (cursor) {
+            // console.log(cursor.key)
+            var row = table.getElementsByTagName('tbody')[0].insertRow();
+            var cell = row.insertCell();
+            var text = document.createTextNode(cursor.key);
+            cell.appendChild(text);
+
+            cell = row.insertCell();
+            text = document.createTextNode(cursor.value.name);
+            cell.appendChild(text);
+
+            cell = row.insertCell();
+            text = document.createTextNode(cursor.value.surname);
+            cell.appendChild(text);
+
+            cell = row.insertCell();
+            text = document.createTextNode(cursor.value.email);
+            cell.appendChild(text);
+
+            cell = row.insertCell()
+            var button = document.createElement('button')
+            button.innerHTML = "Delete"
+            cell.appendChild(button)
+            button.onclick = function () {
+                remove(cursor.key)
+            }
+
+            cursor.continue()
+        }
+    };
+}
+
+function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
 }
 
 
