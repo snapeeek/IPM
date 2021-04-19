@@ -14,8 +14,8 @@ if (!window.indexedDB) {
 }
 
 const clientData = [
-    {name: "gopal", surname: "gogo", email: "gopal@tutorialspoint.com"},
-    {name: "prasad", surname: "tudu", email: "prasad@tutorialspoint.com"}
+    {name: "gopal", surname: "gogo", phone:'505-666-130', email: "gopal@tutorialspoint.com"},
+    {name: "prasad", surname: "tudu", phone:'505-666-135',email: "prasad@tutorialspoint.com"}
 ];
 var db;
 var request = window.indexedDB.open("newDatabase", 1);
@@ -32,6 +32,7 @@ request.onsuccess = function (event) {
 request.onupgradeneeded = function (event) {
     var db = event.target.result;
     var objectStore = db.createObjectStore("client", {autoIncrement: true});
+    objectStore.createIndex('email', 'email', {unique: true})
 
     for (var i in clientData) {
         objectStore.add(clientData[i]);
@@ -68,16 +69,19 @@ function add() {
     var request = db.transaction(["client"], "readwrite")
         .objectStore("client")
         .add({
-            name: document.getElementById('name').value, surname: document.getElementById('surname').value,
+            name: document.getElementById('name').value,
+            surname: document.getElementById('surname').value,
+            phone: document.getElementById('phone').value,
             email: document.getElementById('email').value
         });
 
+
     request.onsuccess = function (event) {
-        alert("Kenny has been added to your database.");
+        alert("Record has been added to your database.");
     };
 
     request.onerror = function (event) {
-        alert("Unable to add data\r\nKenny is aready exist in your database! ");
+        alert("Unable to add data\r");
     }
 }
 
@@ -96,7 +100,7 @@ function remove(key) {
 
 // ----------------------- Creating table --------------------------
 function generateTableHead() {
-    const data = ["ID", "NAME", "SURNAME", "EMAIL", "OPTIONS"];
+    const data = ["ID", "NAME", "SURNAME", "PHONE", "EMAIL", "OPTIONS"];
     const table = document.getElementById('dblist');
     let thead = table.createTHead();
     let row = thead.insertRow();
@@ -132,6 +136,10 @@ function generateTableContents() {
 
             cell = row.insertCell();
             text = document.createTextNode(cursor.value.surname);
+            cell.appendChild(text);
+
+            cell = row.insertCell();
+            text = document.createTextNode(cursor.value.phone);
             cell.appendChild(text);
 
             cell = row.insertCell();
