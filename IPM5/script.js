@@ -32,6 +32,7 @@ request.onsuccess = function (event) {
 request.onupgradeneeded = function (event) {
     var db = event.target.result;
     var objectStore = db.createObjectStore("client", {autoIncrement: true});
+
     objectStore.createIndex('email', 'email', {unique: true})
 
     for (var i in clientData) {
@@ -40,22 +41,9 @@ request.onupgradeneeded = function (event) {
 }
 
 function read() {
-    var transaction = db.transaction(["client"]);
-    var objectStore = transaction.objectStore("client");
-    var request = objectStore.get("00-03");
-
-    request.onerror = function (event) {
-        alert("Unable to retrieve daa from database!");
-    };
-
-    request.onsuccess = function (event) {
-        // Do something with the request.result!
-        if (request.result) {
-            alert("Name: " + request.result.name + ", Email: " + request.result.email);
-        } else {
-            alert("Kenny couldn't be found in your database!");
-        }
-    };
+    if (isTableHeadGenerated === false)
+        generateTableHead();
+    generateTableContents();
 }
 
 function readAll() {
@@ -113,10 +101,11 @@ function generateTableHead() {
     }
 }
 
-function generateTableContents() {
+function generateTableContents(email = null) {
     var objectStore = db.transaction("client").objectStore("client");
 
     removeAllChildNodes(document.getElementById('dblist').getElementsByTagName('tbody')[0])
+
 
     objectStore.openCursor().onsuccess = function (event) {
         var cursor = event.target.result;
@@ -162,6 +151,29 @@ function generateTableContents() {
 function removeAllChildNodes(parent) {
     while (parent.firstChild) {
         parent.removeChild(parent.firstChild);
+    }
+}
+
+function filtering() {
+    var input, filter, table, tr, td, i;
+    input = document.getElementById("filter");
+    filter = input.value.toUpperCase();
+    console.log(filter)
+    table = document.getElementById("dblist").getElementsByTagName("tbody")[0];
+    tr = table.getElementsByTagName("tr");
+    for (j = 0; j < tr.length; j++) {
+        td = tr[j].getElementsByTagName("td");
+        for (i = 0; i < td.length; i++) {
+            if (td[i]) {
+                if (td[i].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    console.log(td[i].innerHTML.toUpperCase())
+                    tr[j].style.display = "";
+                    break;
+                } else {
+                    tr[j].style.display = "none";
+                }
+            }
+        }
     }
 }
 
