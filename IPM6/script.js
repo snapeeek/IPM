@@ -40,10 +40,19 @@ request.onupgradeneeded = function (event) {
     }
 }
 
-function read() {
-    if (isTableHeadGenerated === false)
-        generateTableHead();
-    generateTableContents();
+function edit(key, sth) {
+    var transaction = db.transaction(["client"], "readwrite");
+    var objectStore = transaction.objectStore("client");
+    var request = objectStore.get(key);
+
+
+    console.log(sth);
+    console.log(sth.parent)
+    console.log(sth.parentNode)
+    request.onsuccess = function (event)  {
+        var data = event.target.result
+
+    }
 }
 
 function readAll() {
@@ -53,7 +62,6 @@ function readAll() {
 }
 
 function add() {
-    //var name = [document.getElementById('name').value, document.getElementById('surname').value];
     addRecord([document.getElementById('name').value, document.getElementById('surname').value],
         document.getElementById('phone').value,
         document.getElementById('email').value);
@@ -62,7 +70,7 @@ function add() {
 function addRandom() {
     var name = generateName();
     var phone = generatePhone();
-    var domens = ["@abc.com", "@example.com", "@gmail.com", "@onet.com", "@interia.pl", "@o2.pl"]
+    var domens = ["@abc.com", "@example.com", "@gmail.com", "@onet.pl", "@interia.pl", "@o2.pl"]
     var email = name[0].toLowerCase() + name[1].toLowerCase() + getRandomInt(40, 99).toString() + domens[getRandomInt(0, domens.length)];
 
     addRecord(name, phone, email);
@@ -138,19 +146,35 @@ function generateTableContents(email = null) {
 
             cell = row.insertCell();
             text = document.createTextNode(cursor.value.name);
+            cell.contentEditable = true;
             cell.appendChild(text);
+            cell.addEventListener('input', function () {
+                edit(cursor.key, this)
+            })
 
             cell = row.insertCell();
             text = document.createTextNode(cursor.value.surname);
+            cell.contentEditable = true;
             cell.appendChild(text);
+            cell.addEventListener('input', function () {
+                edit(cursor.key, this)
+            })
 
             cell = row.insertCell();
             text = document.createTextNode(cursor.value.phone);
+            cell.contentEditable = true;
             cell.appendChild(text);
+            cell.addEventListener('input', function () {
+                edit(cursor.key, this)
+            })
 
             cell = row.insertCell();
             text = document.createTextNode(cursor.value.email);
+            cell.contentEditable = true;
             cell.appendChild(text);
+            cell.addEventListener('input', function () {
+                edit(cursor.key, this)
+            })
 
             cell = row.insertCell()
             var button = document.createElement('button')
