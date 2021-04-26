@@ -53,24 +53,10 @@ function readAll() {
 }
 
 function add() {
-
-    var request = db.transaction(["client"], "readwrite")
-        .objectStore("client")
-        .add({
-            name: document.getElementById('name').value,
-            surname: document.getElementById('surname').value,
-            phone: document.getElementById('phone').value,
-            email: document.getElementById('email').value
-        });
-
-
-    request.onsuccess = function (event) {
-        alert("Record has been added to your database.");
-    };
-
-    request.onerror = function (event) {
-        alert("Unable to add data\r");
-    }
+    //var name = [document.getElementById('name').value, document.getElementById('surname').value];
+    addRecord([document.getElementById('name').value, document.getElementById('surname').value],
+        document.getElementById('phone').value,
+        document.getElementById('email').value);
 }
 
 function addRandom() {
@@ -79,6 +65,10 @@ function addRandom() {
     var domens = ["@abc.com", "@example.com", "@gmail.com", "@onet.com", "@interia.pl", "@o2.pl"]
     var email = name[0].toLowerCase() + name[1].toLowerCase() + getRandomInt(40, 99).toString() + domens[getRandomInt(0, domens.length)];
 
+    addRecord(name, phone, email);
+}
+
+function addRecord(name, phone, email) {
     var request = db.transaction(["client"], "readwrite")
         .objectStore("client")
         .add({
@@ -97,6 +87,8 @@ function addRandom() {
         alert("Unable to add data\r");
     }
 }
+
+
 
 function remove(key) {
     var request = db.transaction(["client"], "readwrite")
