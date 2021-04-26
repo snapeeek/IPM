@@ -40,17 +40,23 @@ request.onupgradeneeded = function (event) {
     }
 }
 
-function edit(key, sth) {
+function edit() {
     var transaction = db.transaction(["client"], "readwrite");
     var objectStore = transaction.objectStore("client");
-    var request = objectStore.get(key);
+    var children = this.parentNode.children
+    console.log(children[0].innerHTML)
+    var request = objectStore.get(parseInt(children[0].innerHTML));
+
+    var cell = this
+    console.log(this.innerHTML);
 
 
-    console.log(sth);
-    console.log(sth.parent)
-    console.log(sth.parentNode)
     request.onsuccess = function (event)  {
         var data = event.target.result
+        data.name = cell.innerHTML
+
+
+        var objRequest = objectStore.put(data, +parseInt(children[0].innerHTML));
 
     }
 }
@@ -148,33 +154,25 @@ function generateTableContents(email = null) {
             text = document.createTextNode(cursor.value.name);
             cell.contentEditable = true;
             cell.appendChild(text);
-            cell.addEventListener('input', function () {
-                edit(cursor.key, this)
-            })
+            cell.addEventListener('input', edit)
 
             cell = row.insertCell();
             text = document.createTextNode(cursor.value.surname);
             cell.contentEditable = true;
             cell.appendChild(text);
-            cell.addEventListener('input', function () {
-                edit(cursor.key, this)
-            })
+            cell.addEventListener('input', edit)
 
             cell = row.insertCell();
             text = document.createTextNode(cursor.value.phone);
             cell.contentEditable = true;
             cell.appendChild(text);
-            cell.addEventListener('input', function () {
-                edit(cursor.key, this)
-            })
+            cell.addEventListener('input', edit)
 
             cell = row.insertCell();
             text = document.createTextNode(cursor.value.email);
             cell.contentEditable = true;
             cell.appendChild(text);
-            cell.addEventListener('input', function () {
-                edit(cursor.key, this)
-            })
+            cell.addEventListener('input', edit)
 
             cell = row.insertCell()
             var button = document.createElement('button')
