@@ -239,7 +239,35 @@ function generatePhone() {
     return phone;
 }
 
-
+function getDbObjects(filter = (object) => true) {
+    let ret = new Promise((res, rej) => {
+        let objects = [];
+        if (db) {
+            var store = db.transaction('client', 'readonly').objectStore('client');
+            store.openCursor().onsuccess = (e) => {
+                var c = e.target.result;
+                if (c) {
+                    if (filter(c.value)) {
+                        objects.push(c.value);
+                    }
+                    c.continue();
+                } else {
+                    res(objects);
+                }
+            };
+        }
+    });
+    return ret;
+}
+window.onload = () => {
+    worker = new Worker('worker.js');
+    const triggerWorkerButton = document.getElementById('TriggerWorker');
+    triggerWorkerButton.addEventListener('click', (e) => {
+        getDbObjects().then((value) => {
+            worker.postMessage(JSON.stringify(value))
+        });
+    });
+}
 
 
 
