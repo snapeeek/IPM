@@ -261,6 +261,9 @@ function getDbObjects(filter = (object) => true) {
 }
 window.onload = () => {
     worker = new Worker('worker.js');
+    worker.onmessage = e => {
+        document.getElementById("getWorkerData").innerHTML = e.data;
+    }
     const triggerWorkerButton = document.getElementById('TriggerWorker');
     triggerWorkerButton.addEventListener('click', (e) => {
         getDbObjects().then((value) => {

@@ -8,7 +8,8 @@ onmessage = function (e) {
         tempJSON[i]["email"] =  caseSwapper(tempJSON[i]["email"]);
     }
 
-    console.log(tempJSON)
+    //console.log(tempJSON)
+    postMessage(JSON.stringify(tempJSON));
 };
 
 function caseSwapper(string)
