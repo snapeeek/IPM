@@ -20,7 +20,7 @@ let list;
   });
 
   document.addEventListener("drop", ({target}) => {
-   if(target.className == "item" && target.id !== itemID) {
+   if(target.className === "item" && target.id !== itemID) {
        dragged.remove( dragged );
       for(let i = 0; i < list.length; i += 1) {
         if(list[i] === target){
