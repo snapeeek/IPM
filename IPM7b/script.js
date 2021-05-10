@@ -262,8 +262,12 @@ function getDbObjects(filter = (object) => true) {
 window.onload = () => {
     worker = new Worker('worker.js');
     worker.onmessage = e => {
-        console.log(e.data[1]['name'])
-        document.getElementById("getWorkerData").innerHTML = e.data;
+        var json = JSON.parse(e.data)
+        console.log(json[2]["name"])
+        document.getElementById("name").value = json[2]["name"];
+        document.getElementById("surname").value = json[2]["surname"];
+        document.getElementById("phone").value = json[2]["phone"];
+        document.getElementById("email").value = json[2]["email"];
     }
     const triggerWorkerButton = document.getElementById('TriggerWorker');
     triggerWorkerButton.addEventListener('click', (e) => {
