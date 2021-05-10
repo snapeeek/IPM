@@ -71,6 +71,7 @@ function add() {
     addRecord([document.getElementById('name').value, document.getElementById('surname').value],
         document.getElementById('phone').value,
         document.getElementById('email').value);
+
 }
 
 function addRandom() {
@@ -78,6 +79,7 @@ function addRandom() {
     var phone = generatePhone();
     var domens = ["@abc.com", "@example.com", "@gmail.com", "@onet.pl", "@interia.pl", "@o2.pl"]
     var email = name[0].toLowerCase() + name[1].toLowerCase() + getRandomInt(40, 99).toString() + domens[getRandomInt(0, domens.length)];
+
 
     addRecord(name, phone, email);
 }
@@ -275,6 +277,31 @@ window.onload = () => {
             worker.postMessage(JSON.stringify(value))
         });
     });
+
+
+    colorworker = new Worker('colorworker.js')
+    const colorButton = document.getElementById('submitButton')
+    colorButton.addEventListener('click', (e) => {
+        var dict = {
+            name: document.getElementById("name").value,
+            surname: document.getElementById("surname").value,
+            phone: document.getElementById("phone").value,
+            email: document.getElementById("email").value,
+            link: document.getElementById("photo").value
+        }
+        colorworker.postMessage(JSON.stringify(dict))
+
+    });
+
+    colorworker.addEventListener("message", colorworkerfunction)
+
+}
+
+function colorworkerfunction()
+{
+    let data = e.data;
+    let img = document.getElementById("image");
+    img.src = data["link"];
 }
 
 
