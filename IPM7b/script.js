@@ -288,9 +288,9 @@ window.onload = () => {
 function colorworkerfunction(e)
 {
     let data = JSON.parse(e.data);
-    let img = document.getElementById("bepis");
-    console.log(data["link"])
-    img.style.backgroundImage = "url('" + data["link"] + "')";
+    let img = document.getElementById("imageDest");
+    img.src = data['link']
+    document.getElementById("backgroundDest").style.backgroundColor = "rgba("+data["R"]+","+data["G"]+","+data["B"]+",0.5)";
 }
 
 
