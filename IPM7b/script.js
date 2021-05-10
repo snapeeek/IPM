@@ -297,11 +297,12 @@ window.onload = () => {
 
 }
 
-function colorworkerfunction()
+function colorworkerfunction(e)
 {
-    let data = e.data;
-    let img = document.getElementById("image");
-    img.src = data["link"];
+    let data = JSON.parse(e.data);
+    let img = document.getElementById("bepis");
+    console.log(data["link"])
+    img.style.backgroundImage = "url(" + data["link"] + ")";
 }
 
 
