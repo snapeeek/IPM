@@ -10,7 +10,7 @@ window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange ||
 isTableHeadGenerated = false
 
 if (!window.indexedDB) {
-    window.alert("Your browser doesn't support a stable version of IndexedDB.")
+
 }
 
 const clientData = [
@@ -55,7 +55,6 @@ function edit() {
         var data = event.target.result
         data.name = cell.innerHTML
 
-
         var objRequest = objectStore.put(data, +parseInt(children[0].innerHTML));
 
     }
@@ -93,15 +92,6 @@ function addRecord(name, phone, email) {
             phone: phone,
             email: email
         });
-
-
-    request.onsuccess = function (event) {
-        alert("Record has been added to your database.");
-    };
-
-    request.onerror = function (event) {
-        alert("Unable to add data\r");
-    }
 }
 
 
@@ -111,9 +101,7 @@ function remove(key) {
         .objectStore("client")
         .delete(key);
 
-    request.onsuccess = function (event) {
-        alert("Entry with id" + key + " has been deleted from the database");
-    };
+
 
     generateTableContents()
 }
@@ -280,7 +268,7 @@ window.onload = () => {
 
 
     colorworker = new Worker('colorworker.js')
-    const colorButton = document.getElementById('submitButton')
+    const colorButton = document.getElementById('colorButton')
     colorButton.addEventListener('click', (e) => {
         var dict = {
             name: document.getElementById("name").value,
@@ -302,7 +290,7 @@ function colorworkerfunction(e)
     let data = JSON.parse(e.data);
     let img = document.getElementById("bepis");
     console.log(data["link"])
-    img.style.backgroundImage = "url(" + data["link"] + ")";
+    img.style.backgroundImage = "url('" + data["link"] + "')";
 }
 
 
