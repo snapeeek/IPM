@@ -68,9 +68,9 @@ function readAll() {
 
 function add() {
     var canvas = document.getElementById('imageCanvas');
-    context = canvas.getContext('2d', {preserveDrawingBuffer: true});
+    context = canvas.getContext('2d');
     image_from_url = new Image();
-    //image_from_url.crossOrigin = "Anonymous";
+    image_from_url.src = document.getElementById('photo').value
     image_from_url.onload = function () {
         canvas.width = 100;
         canvas.height = 100;
@@ -78,9 +78,9 @@ function add() {
         context.drawImage(image_from_url, 0, 0, image_from_url.width, image_from_url.height, 0, 0, 100, 100);
         context.fillRect(0, 0, canvas.width, canvas.height);
     }
-    image_from_url.src = document.getElementById('photo').value
 
-    var fromCanvas = canvas.toDataURL('image/jpeg')
+
+    var fromCanvas = canvas.toDataURL("image/jpeg", 1.0)
     console.log(fromCanvas)
 
     addRecord([document.getElementById('name').value, document.getElementById('surname').value],
