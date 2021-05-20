@@ -1,0 +1,12 @@
+input:invalid {
+    border-color: red;
+}
+
+input:valid {
+    border-color: green;
+}
+
+#imageCanvas {
+    width: 100px;
+    height: 100px;
+}
