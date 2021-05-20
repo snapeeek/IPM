@@ -14,8 +14,8 @@ if (!window.indexedDB) {
 }
 
 const clientData = [
-    {name: "gopal", surname: "gogo", phone:'505-666-130', email: "gopal@tutorialspoint.com"},
-    {name: "prasad", surname: "tudu", phone:'505-666-135',email: "prasad@tutorialspoint.com"}
+    {name: "gopal", surname: "gogo", phone:'505-666-130', email: "gopal@tutorialspoint.com", photo: null},
+    {name: "prasad", surname: "tudu", phone:'505-666-135',email: "prasad@tutorialspoint.com", photo: null}
 ];
 var db;
 var request = window.indexedDB.open("newDatabase", 1);
@@ -67,10 +67,26 @@ function readAll() {
 }
 
 function add() {
+    var canvas = document.getElementById('imageCanvas');
+    context = canvas.getContext('2d', {preserveDrawingBuffer: true});
+    image_from_url = new Image();
+    //image_from_url.crossOrigin = "Anonymous";
+    image_from_url.onload = function () {
+        canvas.width = 100;
+        canvas.height = 100;
+        context.fillStyle = "rgba(123,88,211,0.5)";
+        context.drawImage(image_from_url, 0, 0, image_from_url.width, image_from_url.height, 0, 0, 100, 100);
+        context.fillRect(0, 0, canvas.width, canvas.height);
+    }
+    image_from_url.src = document.getElementById('photo').value
+
+    var fromCanvas = canvas.toDataURL('image/jpeg')
+    console.log(fromCanvas)
+
     addRecord([document.getElementById('name').value, document.getElementById('surname').value],
         document.getElementById('phone').value,
-        document.getElementById('email').value);
-
+        document.getElementById('email').value,
+        fromCanvas);
 }
 
 function addRandom() {
@@ -80,17 +96,18 @@ function addRandom() {
     var email = name[0].toLowerCase() + name[1].toLowerCase() + getRandomInt(40, 99).toString() + domens[getRandomInt(0, domens.length)];
 
 
-    addRecord(name, phone, email);
+    addRecord(name, phone, email, null);
 }
 
-function addRecord(name, phone, email) {
+function addRecord(name, phone, email, photo) {
     var request = db.transaction(["client"], "readwrite")
         .objectStore("client")
         .add({
             name: name[0],
             surname: name[1],
             phone: phone,
-            email: email
+            email: email,
+            photo: photo
         });
 }
 
@@ -302,6 +319,31 @@ function colorworkerfunction(e)
     }
     image_from_url.src = data["link"]
 
+}
+
+function loadImage()
+{
+    var transaction = db.transaction(["client"], "readwrite");
+    var objectStore = transaction.objectStore("client");
+    var objectStoreRequest = objectStore.get(parseInt(document.getElementById('imageID').value));
+    objectStoreRequest.onsuccess = function(event) {
+
+        var data = event.target.result
+        console.log(data);
+        var canvas = document.getElementById('imageCanvas');
+        context = canvas.getContext('2d');
+        image_from_url = new Image();
+        //image_from_url.crossOrigin = "Anonymous";
+        image_from_url.onload = function () {
+            canvas.width = 100;
+            canvas.height = 100;
+            // let rgba = "rgba(255,255,255,0.5)"
+            //context.fillStyle = "rgba(255,255,255,0.01)";
+            context.drawImage(image_from_url, 0, 0, image_from_url.width, image_from_url.height, 0, 0, 100, 100);
+            context.fillRect(0, 0, canvas.width, canvas.height);
+        }
+        image_from_url.src = data['photo']
+    }
 }
 
 
