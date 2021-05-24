@@ -40,20 +40,27 @@ request.onupgradeneeded = function (event) {
     }
 }
 
-function edit() {
+function edit(cell, type) {
+    console.log(cell);
     var transaction = db.transaction(["client"], "readwrite");
     var objectStore = transaction.objectStore("client");
-    var children = this.parentNode.children
-    console.log(children[0].innerHTML)
+    var children = cell.parentNode.cells;
+    //console.log(children)
+    //console.log(children[0].innerHTML)
     var request = objectStore.get(parseInt(children[0].innerHTML));
 
-    var cell = this
-    console.log(this.innerHTML);
 
 
     request.onsuccess = function (event)  {
         var data = event.target.result
-        data.name = cell.innerHTML
+        if (type == 1)
+            data.name = cell.innerText;
+        else if (type == 2)
+            data.surname = cell.innerText;
+        else if (type == 3)
+            data.phone = cell.innerText;
+        else if (type == 4)
+            data.email = cell.innerText;
 
 
         var objRequest = objectStore.put(data, +parseInt(children[0].innerHTML));
@@ -149,30 +156,38 @@ function generateTableContents(email = null) {
             var cell = row.insertCell();
             var text = document.createTextNode(cursor.key);
             cell.appendChild(text);
-
-            cell = row.insertCell();
+            
+            var nameCell;
+            nameCell = row.insertCell();
             text = document.createTextNode(cursor.value.name);
-            cell.contentEditable = true;
-            cell.appendChild(text);
-            cell.addEventListener('input', edit)
+            nameCell.contentEditable = true;
+            nameCell.appendChild(text);
+            nameCell.oninput = function() { edit(nameCell, 1)
+            };
 
-            cell = row.insertCell();
+            var surnameCell;
+            surnameCell = row.insertCell();
             text = document.createTextNode(cursor.value.surname);
-            cell.contentEditable = true;
-            cell.appendChild(text);
-            cell.addEventListener('input', edit)
+            surnameCell.contentEditable = true;
+            surnameCell.appendChild(text);
+            surnameCell.oninput = function() { edit(surnameCell, 2)
+            };
 
-            cell = row.insertCell();
+            var phoneCell;
+            phoneCell = row.insertCell();
             text = document.createTextNode(cursor.value.phone);
-            cell.contentEditable = true;
-            cell.appendChild(text);
-            cell.addEventListener('input', edit)
+            phoneCell.contentEditable = true;
+            phoneCell.appendChild(text);
+            phoneCell.oninput = function() { edit(phoneCell, 3)
+            };
 
-            cell = row.insertCell();
+            var mailCell;
+            mailCell = row.insertCell();
             text = document.createTextNode(cursor.value.email);
-            cell.contentEditable = true;
-            cell.appendChild(text);
-            cell.addEventListener('input', edit)
+            mailCell.contentEditable = true;
+            mailCell.appendChild(text);
+            mailCell.oninput = function() { edit(mailCell, 4)
+            };
 
             cell = row.insertCell()
             var button = document.createElement('button')
