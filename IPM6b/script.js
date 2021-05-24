@@ -86,7 +86,12 @@ function addRandom() {
     var domens = ["@abc.com", "@example.com", "@gmail.com", "@onet.pl", "@interia.pl", "@o2.pl"]
     var email = name[0].toLowerCase() + name[1].toLowerCase() + getRandomInt(40, 99).toString() + domens[getRandomInt(0, domens.length)];
 
-    addRecord(name, phone, email);
+
+    document.getElementById('name').value=name[0];
+    document.getElementById('surname').value=name[1];
+    document.getElementById('phone').value=phone;
+    document.getElementById('email').value=email;
+    //addRecord(name, phone, email);
 }
 
 function addRecord(name, phone, email) {
