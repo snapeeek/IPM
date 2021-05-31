@@ -216,8 +216,24 @@ window.onload = function() {
     var input = document.getElementById("filter");
     input.addEventListener("input", filtering);
 
-
+    var select = document.getElementById('users')
+    var objectStore = db.transaction("client").objectStore("client");
+    objectStore.openCursor().onsuccess = function (event) {
+        var cursor = event.target.result;
+        if (cursor) {
+            var string = cursor.value.name + " " + cursor.value.surname;
+            var option = document.createElement('option');
+            option.appendChild(document.createTextNode(string));
+            option.value = cursor.key;
+            select.appendChild(option);
+            cursor.continue()
+        }
+    }
 };
+
+window.onbeforeunload = function () {
+
+}
 
 function filtering() {
     var input, filter, table, tr, td, i;
@@ -263,6 +279,11 @@ function generateName(){
 function generatePhone() {
     var phone = getRandomInt(100, 999).toString() + '-' + getRandomInt(100, 999).toString() + '-' + getRandomInt(100, 999).toString();
     return phone;
+}
+
+function buy()
+{
+
 }
 
 
