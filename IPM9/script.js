@@ -25,7 +25,7 @@ request.onerror = function (event) {
 };
 
 request.onsuccess = function (event) {
-    db = request.result;
+    db = event.target.result;
     console.log("success: " + db);
 };
 
@@ -216,24 +216,9 @@ window.onload = function() {
     var input = document.getElementById("filter");
     input.addEventListener("input", filtering);
 
-    var select = document.getElementById('users')
-    var objectStore = db.transaction("client").objectStore("client");
-    objectStore.openCursor().onsuccess = function (event) {
-        var cursor = event.target.result;
-        if (cursor) {
-            var string = cursor.value.name + " " + cursor.value.surname;
-            var option = document.createElement('option');
-            option.appendChild(document.createTextNode(string));
-            option.value = cursor.key;
-            select.appendChild(option);
-            cursor.continue()
-        }
-    }
+    refreshClients();
 };
 
-window.onbeforeunload = function () {
-
-}
 
 function filtering() {
     var input, filter, table, tr, td, i;
@@ -283,7 +268,44 @@ function generatePhone() {
 
 function buy()
 {
+    var product = document.getElementById('warzywa').value
+    var clientid = document.getElementById('users').value
+    console.log(product);
+    console.log(clientid);
+    var objectStore = db.transaction("client").objectStore("client");
+    var request = objectStore.get(parseInt(clientid));
 
+    request.onsuccess = function (event) {
+        var opened = window.open("")
+        opened.document.write("<html>" +
+            "<head>" +
+            "<title>Zakup</title>" +
+            "</head>" +
+            "<body>" +
+            "<table></table>" +
+            "</body>" +
+            "</html>");
+    }
+
+
+}
+
+function refreshClients() {
+    var select = document.getElementById('users')
+    if (db) {
+        var objectStore = db.transaction("client").objectStore("client");
+        objectStore.openCursor().onsuccess = function (event) {
+            var cursor = event.target.result;
+            if (cursor) {
+                var string = cursor.value.name + " " + cursor.value.surname;
+                var option = document.createElement('option');
+                option.appendChild(document.createTextNode(string));
+                option.value = cursor.key;
+                select.appendChild(option);
+                cursor.continue()
+            }
+        }
+    }
 }
 
 
