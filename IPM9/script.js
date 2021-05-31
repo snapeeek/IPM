@@ -274,15 +274,29 @@ function buy()
     console.log(clientid);
     var objectStore = db.transaction("client").objectStore("client");
     var request = objectStore.get(parseInt(clientid));
-
+    var opened = window.open("");
     request.onsuccess = function (event) {
-        var opened = window.open("")
+        var data = event.target.result;
+
         opened.document.write("<html>" +
             "<head>" +
             "<title>Zakup</title>" +
             "</head>" +
-            "<body>" +
-            "<table></table>" +
+            "<body><h1>Faktura</h1>" +
+            "<table><tr><th>Name</th><th>Surname</th><th>Phone</th><th>Email</th><th>Product</th></tr>" +
+            "<tr><td>" +
+            data.name +
+            "</td><td>" +
+            data.surname +
+            "</td>" +
+            "<td>" +
+            data.phone +
+            "</td>" +
+            "<td>" +
+            data.email +
+            "</td><td>" +
+            product +
+            "</td></tr></table>" +
             "</body>" +
             "</html>");
     }
